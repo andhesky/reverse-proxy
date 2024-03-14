@@ -146,7 +146,7 @@ spec:
       containers:
       - name: yarp-controller
         imagePullPolicy: IfNotPresent
-        image: <REGISTRY_NAME>/yarp-monitor:<TAG>
+        image: andheskyingress.azurecr.io/yarp-monitor:0.2
         ports:
         - containerPort: 8000
           name: api

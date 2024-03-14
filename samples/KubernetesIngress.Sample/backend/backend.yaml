@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: <REGISTRY_NAME>/backend:<TAG>
+        image: andheskyingress.azurecr.io/backend:0.2
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80

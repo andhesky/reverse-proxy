@@ -1,0 +1,14 @@
+docker tag backend:latest andheskyingress.azurecr.io/backend:0.2
+docker push andheskyingress.azurecr.io/backend:0.2
+
+docker tag yarp-ingress:latest andheskyingress.azurecr.io/yarp-ingress:0.2
+docker push andheskyingress.azurecr.io/yarp-ingress:0.2
+
+docker tag yarp-monitor:latest andheskyingress.azurecr.io/yarp-monitor:0.2
+docker push andheskyingress.azurecr.io/yarp-monitor:0.2
+
+kubectl apply -f ./samples/KubernetesIngress.Sample/Monitor/ingress-monitor.yaml
+kubectl apply -f ./samples/KubernetesIngress.Sample/Ingress/ingress.yaml
+
+kubectl apply -f ./samples/KubernetesIngress.Sample/backend/backend.yaml
+kubectl apply -f ./samples/KubernetesIngress.Sample/backend/ingress-sample.yaml
