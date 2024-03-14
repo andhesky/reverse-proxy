@@ -85,6 +85,7 @@ public static class KubernetesReverseProxyServiceCollectionExtensions
         // Register the necessary Kubernetes resource informers
         services.RegisterResourceInformer<V1Ingress, V1IngressResourceInformer>();
         services.RegisterResourceInformer<V1Service, V1ServiceResourceInformer>();
+        services.RegisterResourceInformer<V1Pod, V1PodResourceInformer>();
         services.RegisterResourceInformer<V1Endpoints, V1EndpointsResourceInformer>();
         services.RegisterResourceInformer<V1IngressClass, V1IngressClassResourceInformer>();
 

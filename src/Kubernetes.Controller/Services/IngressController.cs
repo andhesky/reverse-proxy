@@ -38,6 +38,7 @@ public class IngressController : BackgroundHostedService
         IReconciler reconciler,
         IResourceInformer<V1Ingress> ingressInformer,
         IResourceInformer<V1Service> serviceInformer,
+        IResourceInformer<V1Pod> podInformer,
         IResourceInformer<V1Endpoints> endpointsInformer,
         IResourceInformer<V1IngressClass> ingressClassInformer,
         IResourceInformer<V1Secret> secretInformer,
@@ -48,6 +49,7 @@ public class IngressController : BackgroundHostedService
     {
         ArgumentNullException.ThrowIfNull(ingressInformer, nameof(ingressInformer));
         ArgumentNullException.ThrowIfNull(serviceInformer, nameof(serviceInformer));
+        ArgumentNullException.ThrowIfNull(podInformer, nameof(podInformer));
         ArgumentNullException.ThrowIfNull(endpointsInformer, nameof(endpointsInformer));
         ArgumentNullException.ThrowIfNull(ingressClassInformer, nameof(ingressClassInformer));
         ArgumentNullException.ThrowIfNull(secretInformer, nameof(secretInformer));
@@ -58,6 +60,7 @@ public class IngressController : BackgroundHostedService
         var registrations = new List<IResourceInformerRegistration>()
         {
             serviceInformer.Register(Notification),
+            podInformer.Register(Notification),
             endpointsInformer.Register(Notification),
             ingressClassInformer.Register(Notification),
             ingressInformer.Register(Notification)
@@ -137,6 +140,20 @@ public class IngressController : BackgroundHostedService
     /// <param name="eventType">Indicates if the resource new, updated, or deleted.</param>
     /// <param name="resource">The information as provided by the Kubernetes API server.</param>
     private void Notification(WatchEventType eventType, V1Service resource)
+    {
+        var ingressNames = _cache.Update(eventType, resource);
+        if (ingressNames.Count > 0)
+        {
+            NotificationIngressChanged();
+        }
+    }
+
+    /// <summary>
+    /// Called by the informer with real-time resource updates.
+    /// </summary>
+    /// <param name="eventType">Indicates if the resource new, updated, or deleted.</param>
+    /// <param name="resource">The information as provided by the Kubernetes API server.</param>
+    private void Notification(WatchEventType eventType, V1Pod resource)
     {
         var ingressNames = _cache.Update(eventType, resource);
         if (ingressNames.Count > 0)

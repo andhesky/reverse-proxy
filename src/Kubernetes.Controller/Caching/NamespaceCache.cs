@@ -22,7 +22,9 @@ public class NamespaceCache
     private readonly Dictionary<string, ImmutableList<string>> _serviceToIngressNames = new Dictionary<string, ImmutableList<string>>();
     private readonly Dictionary<string, IngressData> _ingressData = new Dictionary<string, IngressData>();
     private readonly Dictionary<string, ServiceData> _serviceData = new Dictionary<string, ServiceData>();
-    private readonly Dictionary<string, Endpoints> _endpointsData = new Dictionary<string, Endpoints>();
+    private readonly Dictionary<string, PodData> _podData = new Dictionary<string, PodData>();
+    private readonly Dictionary<string, Endpoints> _endpointsDataByService = new Dictionary<string, Endpoints>();
+    private readonly Dictionary<string, Endpoints> _endpointsDataByIp = new Dictionary<string, Endpoints>();
 
     public void Update(WatchEventType eventType, V1Ingress ingress)
     {
@@ -149,6 +151,37 @@ public class NamespaceCache
         }
     }
 
+    public ImmutableList<string> Update(WatchEventType eventType, V1Pod pod)
+    {
+        if (pod is null)
+        {
+            throw new ArgumentNullException(nameof(pod));
+        }
+
+        var podName = pod.Name();
+        lock (_sync)
+        {
+            if (eventType == WatchEventType.Added || eventType == WatchEventType.Modified)
+            {
+                _podData[podName] = new PodData(pod);
+            }
+            else if (eventType == WatchEventType.Deleted)
+            {
+                _podData.Remove(podName);
+            }
+
+            if (_endpointsDataByIp.TryGetValue(pod.Status.PodIP, out var endpoints)
+                && _serviceToIngressNames.TryGetValue(endpoints.Name, out var ingressNames))
+            {
+                return ingressNames;
+            }
+            else
+            {
+                return ImmutableList<string>.Empty;
+            }
+        }
+    }
+
     public void GetKeys(string ns, List<NamespacedName> keys)
     {
         if (keys is null)
@@ -175,13 +208,28 @@ public class NamespaceCache
         var serviceName = endpoints.Name();
         lock (_sync)
         {
+            if (_endpointsDataByService.TryGetValue(serviceName, out var oldEndpoints))
+            {
+                foreach (var ip in oldEndpoints.Subsets.SelectMany(x => x.Addresses.Select(ip => ip.Ip)))
+                {
+                    _endpointsDataByIp.Remove(ip);
+                }
+            }
+
             if (eventType == WatchEventType.Added || eventType == WatchEventType.Modified)
             {
-                _endpointsData[serviceName] = new Endpoints(endpoints);
+                var newEndpoints = new Endpoints(endpoints);
+                _endpointsDataByService[serviceName] = newEndpoints;
+
+                foreach (var ip in endpoints.Subsets.SelectMany(x => x.Addresses.Select(ip => ip.Ip)))
+                {
+                    // TODO - this does not handle an ip mapped to multiple endpoints
+                    _endpointsDataByIp[ip] = newEndpoints;
+                }
             }
             else if (eventType == WatchEventType.Deleted)
             {
-                _endpointsData.Remove(serviceName);
+                _endpointsDataByService.Remove(serviceName);
             }
 
             if (_serviceToIngressNames.TryGetValue(serviceName, out var ingressNames))
@@ -227,7 +275,7 @@ public class NamespaceCache
                         servicesList.Add(serviceData);
                     }
 
-                    if (_endpointsData.TryGetValue(serviceName, out var endpoints))
+                    if (_endpointsDataByService.TryGetValue(serviceName, out var endpoints))
                     {
                         endspointsList.Add(endpoints);
                     }
