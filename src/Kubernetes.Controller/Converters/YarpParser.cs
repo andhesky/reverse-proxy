@@ -26,7 +26,7 @@ internal static class YarpParser
             defaultSubsets = ingressContext.Endpoints.SingleOrDefault(x => x.Name == defaultService?.Name).Subsets;
         }
 
-        // cluster can contain multiple replicas for each destination, need to know the lookup base don endpoints
+        // cluster can contain multiple replicas for each destination, need to know the lookup based on endpoints
         var options = HandleAnnotations(ingressContext, ingressContext.Ingress.Metadata);
 
         foreach (var rule in spec?.Rules ?? Enumerable.Empty<V1IngressRule>())
