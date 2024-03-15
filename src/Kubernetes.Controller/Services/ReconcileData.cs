@@ -19,6 +19,7 @@ public struct ReconcileData
         Ingress = ingress;
         ServiceList = services;
         EndpointsList = endpoints;
+        PodsList = pods;
     }
 
     public IngressData Ingress { get; }

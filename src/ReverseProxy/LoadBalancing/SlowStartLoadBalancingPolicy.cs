@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Yarp.ReverseProxy.Model;
@@ -43,10 +45,9 @@ internal sealed class SlowStartLoadBalancingPolicy : ILoadBalancingPolicy
         var random = _randomFactory.CreateRandomInstance();
         var chosenInstance = random.Next(totalWeight);
 
+        //var destinationWeightsJson = JsonSerializer.Serialize(destinationWeights, jsonTypeInfo);
 
-        var destinationWeightsJson = JsonSerializer.Serialize(destinationWeights);
-
-        _logger.LogInformation("Picking Destinations from {0}. TotalWeight={1}", destinationWeightsJson, totalWeight)
+        _logger.LogInformation("Picking Destinations from {0}. TotalWeight={1}", destinationWeights, totalWeight);
 
         for ( var i = 0; i < destinationWeights.Count - 1; i++)
         {

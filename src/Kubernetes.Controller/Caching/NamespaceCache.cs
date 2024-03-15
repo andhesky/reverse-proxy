@@ -288,7 +288,8 @@ public class NamespaceCache
                 return false;
             }
 
-            data = new ReconcileData(ingress, servicesList, endspointsList);
+            // TODO filter pods list
+            data = new ReconcileData(ingress, servicesList, endspointsList, _podData.Values.ToList());
             return true;
         }
     }
