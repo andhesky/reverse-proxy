@@ -24,6 +24,11 @@ public sealed record DestinationConfig
     public string? Health { get; init; }
 
     /// <summary>
+    /// Endpoint accepting active health check probes. E.g. <c>http://127.0.0.1:1234/</c>.
+    /// </summary>
+    public DateTime? LastReadyStateTransition { get; init; }
+
+    /// <summary>
     /// Arbitrary key-value pairs that further describe this destination.
     /// </summary>
     public IReadOnlyDictionary<string, string>? Metadata { get; init; }
@@ -44,7 +49,8 @@ public sealed record DestinationConfig
         return string.Equals(Address, other.Address, StringComparison.OrdinalIgnoreCase)
             && string.Equals(Health, other.Health, StringComparison.OrdinalIgnoreCase)
             && string.Equals(Host, other.Host, StringComparison.OrdinalIgnoreCase)
-            && CaseSensitiveEqualHelper.Equals(Metadata, other.Metadata);
+            && CaseSensitiveEqualHelper.Equals(Metadata, other.Metadata)
+            && Equals(LastReadyStateTransition, other.LastReadyStateTransition);
     }
 
     public override int GetHashCode()
@@ -53,6 +59,7 @@ public sealed record DestinationConfig
             Address?.GetHashCode(StringComparison.OrdinalIgnoreCase),
             Health?.GetHashCode(StringComparison.OrdinalIgnoreCase),
             Host?.GetHashCode(StringComparison.OrdinalIgnoreCase),
-            CaseSensitiveEqualHelper.GetHashCode(Metadata));
+            CaseSensitiveEqualHelper.GetHashCode(Metadata),
+            LastReadyStateTransition?.GetHashCode());
     }
 }

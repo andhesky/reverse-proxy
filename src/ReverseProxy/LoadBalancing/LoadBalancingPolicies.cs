@@ -33,4 +33,9 @@ public static class LoadBalancingPolicies
     /// This avoids the overhead of LeastRequests and the worst case for Random where it selects a busy destination.
     /// </summary>
     public static string PowerOfTwoChoices => nameof(PowerOfTwoChoices);
+
+    /// <summary>
+    /// Assign a weight based on time since ready then assign weighted-randomly.
+    /// </summary>
+    public static string SlowStart => nameof(SlowStart);
 }

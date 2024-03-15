@@ -715,6 +715,7 @@ internal sealed class ProxyConfigManager : EndpointDataSource, IProxyStateLookup
                     {
                         Log.DestinationChanged(_logger, incomingDestination.Key);
                         currentDestination.Model = new DestinationModel(incomingDestination.Value);
+                        currentDestination.Health.LastHealthyStateTransition = incomingDestination.Value.LastReadyStateTransition;
                         changed = true;
                     }
                 }
@@ -724,6 +725,7 @@ internal sealed class ProxyConfigManager : EndpointDataSource, IProxyStateLookup
                     var newDestination = new DestinationState(incomingDestination.Key)
                     {
                         Model = new DestinationModel(incomingDestination.Value),
+                        Health = new DestinationHealthState() { LastHealthyStateTransition = incomingDestination.Value.LastReadyStateTransition }
                     };
                     added = currentDestinations.TryAdd(newDestination.DestinationId, newDestination);
                     Debug.Assert(added);

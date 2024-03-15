@@ -56,7 +56,7 @@ public sealed class DestinationState : IReadOnlyList<DestinationState>
     /// <summary>
     /// Mutable health state for this destination.
     /// </summary>
-    public DestinationHealthState Health { get; } = new DestinationHealthState();
+    public DestinationHealthState Health { get; internal init; } = new DestinationHealthState();
 
     /// <summary>
     /// Keeps track of the total number of concurrent requests on this endpoint.
