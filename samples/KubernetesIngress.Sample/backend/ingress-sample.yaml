@@ -1,7 +1,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: minimal-ingress
+  name: minimal-ingress  
+  annotations:
+    yarp.ingress.kubernetes.io/load-balancing: SlowStartPowerOfTwoChoices
 spec:
   ingressClassName: yarp
   rules:

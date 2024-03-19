@@ -37,5 +37,10 @@ public static class LoadBalancingPolicies
     /// <summary>
     /// Assign a weight based on time since ready then assign weighted-randomly.
     /// </summary>
-    public static string SlowStart => nameof(SlowStart);
+    public static string SlowStartRandom => nameof(SlowStartRandom);
+
+    /// <summary>
+    /// Assign a weight based on time since ready then select two random destinations and then select the one with the least assigned requests.
+    /// </summary>
+    public static string SlowStartPowerOfTwoChoices => nameof(SlowStartPowerOfTwoChoices);
 }
