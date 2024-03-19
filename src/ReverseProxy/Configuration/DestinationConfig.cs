@@ -24,7 +24,7 @@ public sealed record DestinationConfig
     public string? Health { get; init; }
 
     /// <summary>
-    /// Endpoint accepting active health check probes. E.g. <c>http://127.0.0.1:1234/</c>.
+    /// The last time that the destination transitioned to the Read state.
     /// </summary>
     public DateTime? LastReadyStateTransition { get; init; }
 

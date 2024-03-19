@@ -68,7 +68,7 @@ public class IngressConversionTests
         {
             if (cache.TryGetReconcileData(new NamespacedName(ingress.Metadata.NamespaceProperty, ingress.Metadata.Name), out var data))
             {
-                var ingressContext = new YarpIngressContext(ingress, data.ServiceList, data.EndpointsList);
+                var ingressContext = new YarpIngressContext(ingress, data.ServiceList, data.EndpointsList, data.PodsList);
                 YarpParser.ConvertFromKubernetesIngress(ingressContext, configContext);
             }
         }

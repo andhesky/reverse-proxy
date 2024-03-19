@@ -128,7 +128,7 @@ internal static class YarpParser
         cluster.Destinations[uri] = new DestinationConfig()
         {
             Address = uri,
-            LastReadyStateTransition = pod?.Status.Conditions.Where(
+            LastReadyStateTransition = pod?.Status?.Conditions?.Where(
                 x => string.Equals(x.Type, "Ready", StringComparison.OrdinalIgnoreCase)
                     && bool.TryParse(x.Status, out var statusBool)
                     && statusBool).FirstOrDefault()?.LastTransitionTime

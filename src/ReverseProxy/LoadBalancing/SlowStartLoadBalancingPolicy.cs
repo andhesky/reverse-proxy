@@ -27,7 +27,7 @@ internal sealed class SlowStartLoadBalancingPolicy : ILoadBalancingPolicy
         _logger = logger;
     }
 
-    public string Name => LoadBalancingPolicies.Random;
+    public string Name => LoadBalancingPolicies.SlowStart;
 
     public DestinationState? PickDestination(HttpContext context, ClusterState cluster, IReadOnlyList<DestinationState> availableDestinations)
     {

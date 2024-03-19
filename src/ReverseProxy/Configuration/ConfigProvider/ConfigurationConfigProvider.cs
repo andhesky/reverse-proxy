@@ -379,10 +379,13 @@ internal sealed class ConfigurationConfigProvider : IProxyConfigProvider, IDispo
 
     private static DestinationConfig CreateDestination(IConfigurationSection section)
     {
+        var isValidReadyStateTransition = DateTime.TryParse(section[nameof(DestinationConfig.LastReadyStateTransition)], out var lastReadyStateTransition);
+
         return new DestinationConfig
         {
             Address = section[nameof(DestinationConfig.Address)]!,
             Health = section[nameof(DestinationConfig.Health)],
+            LastReadyStateTransition = isValidReadyStateTransition ? lastReadyStateTransition : null,
             Metadata = section.GetSection(nameof(DestinationConfig.Metadata)).ReadStringDictionary(),
             Host = section[nameof(DestinationConfig.Host)]
         };
