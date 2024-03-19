@@ -272,6 +272,7 @@ public class ConfigurationConfigProviderTests
                     ""Address"": ""https://localhost:10000/destA"",
                     ""Health"": ""https://localhost:20000/destA"",
                     ""Host"": ""localhost"",
+                    ""LastReadyStateTransition"": ""2024-03-19T13:37:37Z"",
                     ""Metadata"": {
                         ""destA-K1"": ""destA-V1"",
                         ""destA-K2"": ""destA-V2""
@@ -281,6 +282,7 @@ public class ConfigurationConfigProviderTests
                     ""Address"": ""https://localhost:10000/destB"",
                     ""Health"": ""https://localhost:20000/destB"",
                     ""Host"": ""localhost"",
+                    ""LastReadyStateTransition"": ""2024-03-19T13:37:37Z"",
                     ""Metadata"": {
                         ""destB-K1"": ""destB-V1"",
                         ""destB-K2"": ""destB-V2""
@@ -304,11 +306,13 @@ public class ConfigurationConfigProviderTests
                 ""destinationC"": {
                     ""Address"": ""https://localhost:10001/destC"",
                     ""Host"": ""localhost"",
+                    ""LastReadyStateTransition"": ""2024-03-19T13:37:37Z"",
                     ""Metadata"": null
                 },
                 ""destinationD"": {
                     ""Address"": ""https://localhost:10000/destB"",
                     ""Host"": ""remotehost"",
+                    ""LastReadyStateTransition"": ""2024-03-19T13:37:37Z"",
                     ""Metadata"": null
                 }
             },

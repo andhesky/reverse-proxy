@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System;
+
 namespace Yarp.ReverseProxy.Model;
 
 /// <summary>
@@ -28,4 +30,9 @@ public class DestinationHealthState
         get => _active;
         set => _active = value;
     }
+
+    /// <summary>
+    /// Last HealthyState Transition or null if not healthy or unknown
+    /// </summary>
+    public DateTime? LastHealthyStateTransition { get; set; }
 }

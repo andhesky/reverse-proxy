@@ -37,7 +37,7 @@ spec:
       containers:
       - name: yarp-proxy
         imagePullPolicy: IfNotPresent
-        image: <REGISTRY_NAME>/yarp-ingress:<TAG>
+        image: andheskyingress.azurecr.io/yarp-ingress:0.13
         ports:
         - containerPort: 8000
           name: proxy

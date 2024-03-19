@@ -75,6 +75,7 @@ public class IngressController : BackgroundHostedService
 
         _registrationsReady = false;
         serviceInformer.StartWatching();
+        podInformer.StartWatching();
         endpointsInformer.StartWatching();
         ingressClassInformer.StartWatching();
         ingressInformer.StartWatching();
@@ -160,6 +161,8 @@ public class IngressController : BackgroundHostedService
         {
             NotificationIngressChanged();
         }
+
+        Logger.LogInformation("EventType {0}. loaded {1}/{2}", eventType, resource.Namespace(), resource.Name());
     }
 
     /// <summary>

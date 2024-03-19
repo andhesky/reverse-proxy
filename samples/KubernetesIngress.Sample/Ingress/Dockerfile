@@ -1,6 +1,6 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-cbl-mariner2.0-distroless AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
@@ -28,7 +28,7 @@ WORKDIR /src
 COPY . .
 
 WORKDIR /src/samples/KubernetesIngress.Sample/Ingress/
-RUN /root/.dotnet/dotnet publish -c Release --no-restore -o /app/publish -f net6.0
+RUN /root/.dotnet/dotnet publish -c Release --no-restore -o /app/publish -f net8.0
 
 FROM base AS final
 WORKDIR /app

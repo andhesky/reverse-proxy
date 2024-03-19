@@ -170,7 +170,10 @@ public class NamespaceCache
                 _podData.Remove(podName);
             }
 
-            if (_endpointsDataByIp.TryGetValue(pod.Status.PodIP, out var endpoints)
+            var podIp = pod?.Status?.PodIP;
+            if (!string.IsNullOrEmpty(podIp)
+                && _endpointsDataByIp.TryGetValue(podIp, out var endpoints)
+                && !string.IsNullOrEmpty(endpoints.Name)
                 && _serviceToIngressNames.TryGetValue(endpoints.Name, out var ingressNames))
             {
                 return ingressNames;
@@ -221,10 +224,13 @@ public class NamespaceCache
                 var newEndpoints = new Endpoints(endpoints);
                 _endpointsDataByService[serviceName] = newEndpoints;
 
-                foreach (var ip in endpoints.Subsets.SelectMany(x => x.Addresses.Select(ip => ip.Ip)))
+                if (endpoints.Subsets != null)
                 {
-                    // TODO - this does not handle an ip mapped to multiple endpoints
-                    _endpointsDataByIp[ip] = newEndpoints;
+                    foreach (var ip in endpoints.Subsets.SelectMany(x => x?.Addresses?.Select(ip => ip.Ip) ?? Enumerable.Empty<string>()))
+                    {
+                        // TODO - this does not handle an ip mapped to multiple endpoints
+                        _endpointsDataByIp[ip] = newEndpoints;
+                    }
                 }
             }
             else if (eventType == WatchEventType.Deleted)
@@ -288,7 +294,8 @@ public class NamespaceCache
                 return false;
             }
 
-            data = new ReconcileData(ingress, servicesList, endspointsList);
+            // TODO filter pods list
+            data = new ReconcileData(ingress, servicesList, endspointsList, _podData.Values.ToList());
             return true;
         }
     }

@@ -27,6 +27,7 @@ public class IngressControllerTests
     private readonly Mock<IReconciler> _mockReconciler = new();
     private readonly SyncResourceInformer<V1Ingress> _ingressInformer = new();
     private readonly SyncResourceInformer<V1Service> _serviceInformer = new();
+    private readonly SyncResourceInformer<V1Pod> _podInformer = new();
     private readonly SyncResourceInformer<V1Endpoints> _endpointsInformer = new();
     private readonly SyncResourceInformer<V1IngressClass> _ingressClassInformer = new();
     private readonly SyncResourceInformer<V1Secret> _secretInformer = new();
@@ -44,7 +45,7 @@ public class IngressControllerTests
         _mockOptions.Setup(o => o.Value).Returns(optionsNoWatchSecrets);
 
         var logger = new TestLogger<IngressController>(output);
-        _controller = new IngressController(_mockCache.Object, _mockReconciler.Object, _ingressInformer, _serviceInformer, _endpointsInformer, _ingressClassInformer, _secretInformer, _mockHostApplicationLifetime.Object, _mockOptions.Object, logger);
+        _controller = new IngressController(_mockCache.Object, _mockReconciler.Object, _ingressInformer, _serviceInformer, _podInformer, _endpointsInformer, _ingressClassInformer, _secretInformer, _mockHostApplicationLifetime.Object, _mockOptions.Object, logger);
     }
 
     [Fact]

@@ -116,13 +116,22 @@ internal static class YarpParser
     {
         var protocol = ingressContext.Options.Https ? "https" : "http";
         var uri = $"{protocol}://{host}";
+
+
+        // TODO, we could generate a hashmap once rather than doing this lookup every time
+        var pod = ingressContext.PodsList?.Where(x => x.Status.PodIP == host).FirstOrDefault();
+
         if (port.HasValue)
         {
             uri += $":{port}";
         }
         cluster.Destinations[uri] = new DestinationConfig()
         {
-            Address = uri
+            Address = uri,
+            LastReadyStateTransition = pod?.Status?.Conditions?.Where(
+                x => string.Equals(x.Type, "Ready", StringComparison.OrdinalIgnoreCase)
+                    && bool.TryParse(x.Status, out var statusBool)
+                    && statusBool).FirstOrDefault()?.LastTransitionTime
         };
     }
 
